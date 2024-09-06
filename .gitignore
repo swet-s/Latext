@@ -1,0 +1,32 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Dependency directories
+jspm_packages/
+
+# Build output
+dist/
+build/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE or editor specific files
+.vscode/
+.idea/
+*.swp
+
+# Miscellaneous
+*.pem
+*.key
+*.crt
+*.db
