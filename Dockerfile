@@ -1,5 +1,5 @@
 # Use a base image with LaTeX and Node.js installed
-FROM node:14
+FROM node:20
 
 # Install LaTeX
 RUN apt-get update && apt-get install -y texlive-full
