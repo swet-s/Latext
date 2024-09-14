@@ -6,9 +6,7 @@ const uri =
     "@icluster.kiuylnu.mongodb.net/?retryWrites=true&w=majority";
 
 const connectDB = () => {
-    mongoose.connect(uri, {
-        useNewUrlParser: true,
-    });
+    mongoose.connect(uri, {});
 };
 
 module.exports = connectDB;
