@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     const userId = req.query.userId || "admin";
     try {
-        const text = await Text.findOne({ userId }).sort({ _id: -1 }); // Find the latest text for the user
+        const text = await Text.findOne({ userId }).select("name content");
         if (text) res.json(text);
         else res.status(404).json({ error: "User not found" });
     } catch (error) {
@@ -14,10 +14,9 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Update or create text for a specific user
+// Update content for a specific user
 router.put("/", async (req, res) => {
-    const { content, name } = req.body;
-
+    const { content } = req.body;
     const userId = req.body.userId || "admin";
 
     try {
@@ -25,16 +24,37 @@ router.put("/", async (req, res) => {
 
         if (text) {
             text.content = content;
-            text.name = name;
             await text.save();
             res.json({ message: `Content updated successfully for userId: ${userId}` });
         } else {
-            const newText = new Text({ content, name, userId });
+            const newText = new Text({ content, userId });
             await newText.save();
             res.json({ message: `Content created successfully for userId: ${userId}` });
         }
     } catch (error) {
-        res.status(500).json({ error: "Error updating data" });
+        res.status(500).json({ error: "Error updating content" });
+    }
+});
+
+// Update name for a specific user
+router.put("/name", async (req, res) => {
+    const { name } = req.body;
+    const userId = req.body.userId || "admin";
+
+    try {
+        let text = await Text.findOne({ userId });
+
+        if (text) {
+            text.name = name;
+            await text.save();
+            res.json({ message: `Name updated successfully for userId: ${userId}` });
+        } else {
+            const newText = new Text({ name, userId });
+            await newText.save();
+            res.json({ message: `Name created successfully for userId: ${userId}` });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Error updating name" });
     }
 });
 
