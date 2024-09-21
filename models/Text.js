@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const textSchema = new mongoose.Schema({
     content: { type: String },
-    name: { type: String },
     userId: {
         type: String,
         required: true,

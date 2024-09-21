@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     const userId = req.query.userId || "admin";
     try {
-        const text = await Text.findOne({ userId }).select("name content");
+        const text = await Text.findOne({ userId }).select("content");
         if (text) res.json(text);
         else res.status(404).json({ error: "User not found" });
     } catch (error) {
@@ -33,28 +33,6 @@ router.put("/", async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ error: "Error updating content" });
-    }
-});
-
-// Update name for a specific user
-router.put("/name", async (req, res) => {
-    const { name } = req.body;
-    const userId = req.body.userId || "admin";
-
-    try {
-        let text = await Text.findOne({ userId });
-
-        if (text) {
-            text.name = name;
-            await text.save();
-            res.json({ message: `Name updated successfully for userId: ${userId}` });
-        } else {
-            const newText = new Text({ name, userId });
-            await newText.save();
-            res.json({ message: `Name created successfully for userId: ${userId}` });
-        }
-    } catch (error) {
-        res.status(500).json({ error: "Error updating name" });
     }
 });
 
