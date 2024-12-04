@@ -1,47 +1,8 @@
 const express = require("express");
 const axios = require("axios");
-const { exec } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const router = express.Router();
-
-// Helper function to fetch LaTeX content from GitHub
-const fetchLatexContent = async () => {
-    const token = process.env.GITHUB_TOKEN;
-    const repoOwner = "swet-s";
-    const repoName = "CV";
-    const filePath = "resume.tex";
-
-    try {
-        const response = await axios.get(
-            `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Accept: "application/vnd.github.v3.raw",
-                },
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        if (error.response) {
-            if (error.response.status === 404) {
-                throw new Error("File not found in the repository.");
-            } else if (error.response.status === 403) {
-                throw new Error("Access denied or token does not have permission.");
-            } else {
-                throw new Error(
-                    `GitHub API error: ${error.response.status} - ${error.response.data.message}`
-                );
-            }
-        } else if (error.request) {
-            throw new Error("No response from GitHub. Possible network issue.");
-        } else {
-            throw new Error(`Error in setting up request: ${error.message}`);
-        }
-    }
-};
 
 // Helper function to fetch PDF content from GitHub
 const fetchPdfContent = async () => {
@@ -82,16 +43,8 @@ const fetchPdfContent = async () => {
     }
 };
 
-router.get("/resume", async (req, res) => {
-    try {
-        const latexContent = await fetchLatexContent();
-        res.status(200).send(latexContent);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
 
-router.get("/resumepdf", async (req, res) => {
+router.get("/resume", async (req, res) => {
     try {
         const pdfContent = await fetchPdfContent();
         const fileName = req.query.filename ? `${req.query.filename}.pdf` : "resume.pdf";
